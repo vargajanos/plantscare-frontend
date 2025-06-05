@@ -1,0 +1,114 @@
+<div class="container mt-4">
+    <div class="row mb-4">
+      <div class="col-md-12">
+        <h2>Dashboard</h2>
+        <p class="text-muted">Statistics</p>
+      </div>
+    </div>
+  
+    
+    <div *ngIf="loading" class="text-center my-5">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    
+    <div *ngIf="error" class="alert alert-danger">
+      {{ error }}
+      <button class="btn btn-outline-danger ms-3" (click)="loadStats()">Retry</button>
+    </div>
+  
+    
+    <div *ngIf="!loading && !error">
+      
+      
+      <div class="row mb-4">
+        <div class="col-md-4">
+          <div class="card bg-primary text-white h-100">
+            <div class="card-body">
+              <h5 class="card-title">Total Plants</h5>
+              <h2 class="display-4">{{ totalPlants }}</h2>
+              <p class="card-text">Plants in your collection</p>
+            </div>
+            <div class="card-footer d-flex align-items-center bg-primary border-0">
+              <a [routerLink]="['/plants']" class="text-white text-decoration-none">View all plants <i class="bi bi-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-4">
+          <div class="card bg-success text-white h-100">
+            <div class="card-body">
+              <h5 class="card-title">Watered Plants</h5>
+              <h2 class="display-4">{{ totalPlants - plantsNeedingWater }}</h2>
+              <p class="card-text">Plants that have been watered</p>
+            </div>
+            <div class="card-footer d-flex align-items-center bg-success border-0">
+              <a [routerLink]="['/waterings']" class="text-white text-decoration-none">View watering logs <i class="bi bi-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-4">
+          <div class="card bg-warning text-dark h-100">
+            <div class="card-body">
+              <h5 class="card-title">Plants Needing Water</h5>
+              <h2 class="display-4">{{ plantsNeedingWater }}</h2>
+              <p class="card-text">Plants that haven't been watered</p>
+            </div>
+            <div class="card-footer d-flex align-items-center bg-warning border-0">
+              <a [routerLink]="['/plants']" class="text-dark text-decoration-none">Check plants <i class="bi bi-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Plant Watering Stats Table -->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0">Plant Watering Statistics</h5>
+            </div>
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                  <thead>
+                    <tr>
+                      <th>Plant Name</th>
+                      <th>Species</th>
+                      <th>Last Watered</th>
+                      <th>Watering Count</th>
+                      <th>Average Amount (ml)</th>
+                      <th>Total Water Used (ml)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let plant of stats">
+                      <td><strong>{{ plant.plant_name }}</strong></td>
+                      <td>{{ plant.species }}</td>
+                      <td>
+                        <span [class.text-danger]="!plant.last_watered_date">
+                          {{ formatDate(plant.last_watered_date) }}
+                        </span>
+                      </td>
+                      <td>{{ plant.watering_count }}</td>
+                      <td>{{ plant.average_amount_ml || 0 }} ml</td>
+                      <td>{{ plant.total_watered_ml || 0 }} ml</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="d-flex justify-content-between align-items-center">
+                <span><strong>Showing {{ stats.length }} plants</strong></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+
+    </div>
+  </div>

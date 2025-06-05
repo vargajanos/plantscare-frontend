@@ -1,0 +1,93 @@
+<div class="container mt-4">
+    <div class="row">
+      <div class="col-md-8 offset-md-2">
+        <div class="card">
+          <div class="card-header">
+            <h3>Edit Plant</h3>
+          </div>
+          <div class="card-body">
+            <div *ngIf="loading" class="text-center">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+            
+            <form *ngIf="!loading" [formGroup]="plantForm" (ngSubmit)="onSubmit()">
+              
+              <div *ngIf="errorMessage" class="alert alert-danger">
+                {{ errorMessage }}
+              </div>
+    
+             
+              <div class="mb-3">
+                <label for="name" class="form-label">Plant Name *</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="name" 
+                  formControlName="name"
+                  [class.is-invalid]="plantForm.get('name')?.invalid && plantForm.get('name')?.touched"
+                >
+                <div class="invalid-feedback" *ngIf="plantForm.get('name')?.errors?.['required'] && plantForm.get('name')?.touched">
+                  Plant name is required.
+                </div>
+                <div class="invalid-feedback" *ngIf="plantForm.get('name')?.errors?.['minlength'] && plantForm.get('name')?.touched">
+                  Plant name must be at least 3 characters.
+                </div>
+              </div>
+    
+              
+              <div class="mb-3">
+                <label for="species" class="form-label">Species *</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="species" 
+                  formControlName="species"
+                  [class.is-invalid]="plantForm.get('species')?.invalid && plantForm.get('species')?.touched"
+                >
+                <div class="invalid-feedback" *ngIf="plantForm.get('species')?.errors?.['required'] && plantForm.get('species')?.touched">
+                  Species is required.
+                </div>
+              </div>
+   
+              
+              <div class="mb-3">
+                <label for="water_interval_days" class="form-label">Watering Interval (days) *</label>
+                <input 
+                  type="number" 
+                  class="form-control" 
+                  id="water_interval_days" 
+                  formControlName="water_interval_days"
+                  [class.is-invalid]="plantForm.get('water_interval_days')?.invalid && plantForm.get('water_interval_days')?.touched"
+                >
+                <div class="invalid-feedback" *ngIf="plantForm.get('water_interval_days')?.invalid && plantForm.get('water_interval_days')?.touched">
+                  Please enter a valid watering interval between 1 and 90 days.
+                </div>
+              </div>
+     
+              
+              <div class="d-flex justify-content-end">
+                <button 
+                  type="button" 
+                  class="btn btn-secondary me-2" 
+                  (click)="cancel()"
+                  [disabled]="isSubmitting"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit" 
+                  class="btn btn-primary" 
+                  [disabled]="plantForm.invalid || isSubmitting"
+                >
+                  <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                  Update Plant
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

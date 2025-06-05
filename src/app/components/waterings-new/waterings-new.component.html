@@ -1,0 +1,109 @@
+<div class="container mt-4">
+    <div class="row">
+      <div class="col-md-8 offset-md-2">
+        <div class="card">
+          <div class="card-header">
+            <h3>Add New Watering Record</h3>
+          </div>
+          <div class="card-body">
+            <div *ngIf="loading" class="text-center">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+            
+            <form *ngIf="!loading" [formGroup]="wateringForm" (ngSubmit)="onSubmit()">
+
+              <div *ngIf="errorMessage" class="alert alert-danger">
+                {{ errorMessage }}
+              </div>
+
+
+              <div class="mb-3">
+                <label for="plant_id" class="form-label">Select Plant *</label>
+                <select 
+                  class="form-select" 
+                  id="plant_id" 
+                  formControlName="plant_id"
+                  [class.is-invalid]="wateringForm.get('plant_id')?.invalid && wateringForm.get('plant_id')?.touched"
+                >
+                  <option value="" disabled>Select a plant</option>
+                  <option *ngFor="let plant of plants" [value]="plant.id">{{ plant.name }} ({{ plant.species }})</option>
+                </select>
+                <div class="invalid-feedback" *ngIf="wateringForm.get('plant_id')?.errors?.['required'] && wateringForm.get('plant_id')?.touched">
+                  Please select a plant.
+                </div>
+              </div>
+    
+
+              <div class="mb-3">
+                <label for="date" class="form-label">Date *</label>
+                <input 
+                  type="date" 
+                  class="form-control" 
+                  id="date" 
+                  formControlName="date"
+                  [class.is-invalid]="wateringForm.get('date')?.invalid && wateringForm.get('date')?.touched"
+                >
+                <div class="invalid-feedback" *ngIf="wateringForm.get('date')?.errors?.['required'] && wateringForm.get('date')?.touched">
+                  Date is required.
+                </div>
+              </div>
+    
+
+              <div class="mb-3">
+                <label for="amount_ml" class="form-label">Amount (ml) *</label>
+                <input 
+                  type="number" 
+                  class="form-control" 
+                  id="amount_ml" 
+                  formControlName="amount_ml"
+                  [class.is-invalid]="wateringForm.get('amount_ml')?.invalid && wateringForm.get('amount_ml')?.touched"
+                >
+                <div class="invalid-feedback" *ngIf="wateringForm.get('amount_ml')?.errors?.['required'] && wateringForm.get('amount_ml')?.touched">
+                  Amount is required.
+                </div>
+                <div class="invalid-feedback" *ngIf="wateringForm.get('amount_ml')?.errors?.['min'] && wateringForm.get('amount_ml')?.touched">
+                  Amount must be at least 1ml.
+                </div>
+                <div class="invalid-feedback" *ngIf="wateringForm.get('amount_ml')?.errors?.['max'] && wateringForm.get('amount_ml')?.touched">
+                  Amount cannot exceed 1000ml.
+                </div>
+              </div>
+    
+
+              <div class="mb-3">
+                <label for="notes" class="form-label">Notes</label>
+                <textarea 
+                  class="form-control" 
+                  id="notes" 
+                  rows="3" 
+                  formControlName="notes"
+                ></textarea>
+              </div>
+    
+ 
+              <div class="d-flex justify-content-end">
+                <button 
+                  type="button" 
+                  class="btn btn-secondary me-2" 
+                  (click)="cancel()"
+                  [disabled]="isSubmitting"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit" 
+                  class="btn btn-primary" 
+                  [disabled]="wateringForm.invalid || isSubmitting"
+                >
+                  <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                  Save Watering Record
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

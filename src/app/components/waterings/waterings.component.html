@@ -1,0 +1,93 @@
+<div class="container mt-4">
+    <div class="row mb-3">
+      <div class="col-md-8">
+        <h2>Watering Records</h2>
+        <p class="text-muted">Track when and how much water your plants received</p>
+      </div>
+      <div class="col-md-4 text-end">
+        <button class="btn btn-success" [routerLink]="['/waterings/new']">
+          <i class="bi bi-plus-circle"></i> Add New Watering
+        </button>
+      </div>
+    </div>
+  
+
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <label for="plantSelector" class="form-label">Select a plant to view watering records:</label>
+            <select 
+              id="plantSelector" 
+              class="form-select" 
+              [(ngModel)]="selectedPlantId" 
+              (change)="loadWaterings(selectedPlantId!)"
+              [disabled]="loading || plants.length === 0">
+              <option *ngFor="let plant of plants" [value]="plant.id">{{ plant.name }} ({{ plant.species }})</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+
+    <div *ngIf="loading" class="text-center my-5">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    
+
+    <div *ngIf="error" class="alert alert-danger">
+      {{ error }}
+      <button class="btn btn-outline-danger ms-3" (click)="loadPlants()">Retry</button>
+    </div>
+  
+
+    <div *ngIf="!loading && !error && plants.length > 0 && waterings.length === 0" class="alert alert-info">
+        <h4>No watering records found</h4>
+        <p>This plant doesn't have any watering records yet.</p>
+        <button class="btn btn-success" [routerLink]="['/waterings/new']" [queryParams]="{plant_id: selectedPlantId}">
+          Add First Watering Record
+        </button>
+      </div>
+  
+    <div *ngIf="!loading && !error && waterings.length > 0" class="card">
+      <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Watering History</h5>
+        </div>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-striped table-hover mb-0">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Date</th>
+                <th>Amount (ml)</th>
+                <th>Notes</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let watering of waterings; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ formatDate(watering.date_watered) }}</td>
+                <td>{{ watering.amount_ml }} ml</td>
+                <td>{{ watering.notes || 'No notes' }}</td>
+                <td>
+                  <button class="btn btn-sm btn-danger" (click)="deleteWatering(watering.id)">
+                    <i class="bi bi-trash"></i> Delete
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card-footer">
+        <small class="text-muted">Showing {{ waterings.length }} watering records</small>
+      </div>
+    </div>
+  </div>
